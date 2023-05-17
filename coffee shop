@@ -1,0 +1,601 @@
+.MODEL SMALL
+.STACK 100H
+.DATA       
+
+
+
+INTRO     DB 10,13,10,13,'                      COFFEE SHOP MANAGEMENT SYSTEM$            ',10,13
+INTRO2   DB  10,13,      '                              Final Project                    $',10,13
+INTRO3   DB  10,13,10,13,10,13,'                                STARGOAT                 $',10,13                           
+
+ENTER DB           10,13,'PLACE YOUR ORDER: $'
+INFO DB            10,13,'                  KEYS         ITEMS             PRICE$'
+Espresso    DB     10,13,'                   1          Espresso            150 $'                        
+Cappuccino  DB     10,13,'                   2          Cappuccino          140 $'                     
+Americano   DB     10,13,'                   3          Americano           210 $'
+macchiato   DB     10,13,'                   4          Caffe macchiato     350 $'         
+Latte       DB     10,13,'                   5          Latte               140 $'
+Flat_white  DB     10,13,'                   6          Flat white          220 $'
+Caffe_moch  DB     10,13,'                   7          Caffe mocha         310 $'
+Cortado     DB     10,13,'                   8          Cortado             180 $'
+Cold_brew   DB     10,13,'                   9          Cold brew           225 $'
+
+E_QUANTITY  DB     10,13,10,13,'ENTER QUANTITY: $'
+
+AGAIN       DB     10,13,10,13,'ORDER AGAIN?',10,13,'1.YES',10,13,'2.NO',10,13,'$'
+
+ER_MSG      DB     10,13,'ERROR INPUT$',10,13  
+           
+CHOICE      DB     10,13,'ENTER YOUR CHOICE:$'    
+            
+FT          DB     10,13,10,13,'TOTAL AMOUNT IS :$' 
+
+R           DB    0DH,0AH,0DH,0AH,'TOTAL AMOUNT IS : $' 
+
+E_DISCOUNT  DB     10,13,10,13,'ENTER DISCOUNT  ||  0 IF NONE:',10,13,'$' 
+
+line        DB     10,13,'               |____________________________________________|                $'
+
+A DW ?                          
+B DW ?
+C DW ?
+S DW 0,'$'
+                                 
+NL DB 0DH,0AH,'$'               
+
+ 
+.CODE
+  
+     MOV AX, @DATA               
+     MOV DS, AX     
+     
+     
+     LEA DX,INTRO            
+     MOV AH,9
+     INT 21H
+     
+     LEA DX,INTRO2            
+     MOV AH,9
+     INT 21H  
+     
+     LEA DX,INTRO3            
+     MOV AH,9
+     INT 21H     
+          
+     LEA DX,NL                  
+     MOV AH,9
+     INT 21H       
+
+     JMP BEGINTOP               
+
+ ERROR121: 
+ 
+     MOV BL,12 
+     MOV AH,9                   
+     MOV AL,0  
+     INT 10H 
+                  
+     LEA DX,ER_MSG              
+     MOV AH,9
+     INT 21H                   
+
+                
+
+ BEGINTOP:   
+ 
+     LEA DX,NL                  
+     MOV AH,9
+     INT 21H
+    
+                                 
+     MOV BL,10                  
+     MOV AH,9 
+     MOV AL,0  
+     INT 10H                
+      
+     LEA DX,INFO                 
+     MOV AH,9 
+     INT 21H                     
+     
+     MOV BL,11                   
+     MOV AH,9 
+     MOV AL,0  
+     INT 10H   
+   
+     LEA DX,Espresso             
+     MOV AH,9
+     INT 21H 
+                   
+     LEA DX,Cappuccino              
+     MOV AH,9
+     INT 21H  
+     
+     LEA DX,Americano           
+     MOV AH,9
+     INT 21H    
+                     
+     LEA DX,macchiato            
+     MOV AH,9
+     INT 21H   
+                   
+     LEA DX,Latte          
+     MOV AH,9
+     INT 21H  
+                     
+     LEA DX,Flat_white         
+     MOV AH,9
+     INT 21H 
+      
+     LEA DX,Caffe_moch              
+     MOV AH,9
+     INT 21H    
+       
+     LEA DX,Cortado             
+     MOV AH,9       
+     INT 21H    
+       
+     LEA DX,Cold_brew             
+     MOV AH,9       
+     INT 21H 
+     
+     LEA DX,line                
+     MOV AH,9       
+     INT 21H
+         
+     LEA DX,NL                  
+     MOV AH,9
+     INT 21H     
+     
+             
+     LEA DX,ENTER               
+     MOV AH,9       
+     INT 21H    
+     
+     MOV AH,1                   
+     INT 21H 
+     
+                                 
+     CMP AL,49                 
+     JE Espresso1
+     
+     CMP AL,50                 
+     JE Cappuccino1
+     
+     CMP AL,51                   
+     JE Americano1
+     
+     CMP AL,52                  
+     JE macchiato1
+     
+     CMP AL,53                  
+     JE Latte1
+     
+     CMP AL,54                   
+     JE Flatwhite1
+     
+     CMP AL,55                 
+     JE Caffemocha1
+     
+     CMP AL,56                  
+     JE Cortado1
+     
+     CMP AL,57                  
+     JE Coldbrew1
+ 
+     JMP ERROR121               
+     
+  
+Espresso1:
+                                 
+MOV A,150                       
+
+JMP QUANTITY
+
+Cappuccino1:
+
+MOV A,140                       
+
+JMP QUANTITY 
+
+Americano1:
+
+MOV A,210                      
+
+JMP QUANTITY 
+
+macchiato1: 
+
+MOV A,350                      
+
+JMP QUANTITY 
+
+Latte1: 
+
+MOV A,140                      
+
+JMP QUANTITY 
+
+Flatwhite1:
+
+MOV A,220                      
+
+JMP QUANTITY 
+
+Caffemocha1:   
+
+MOV A,310                      
+
+JMP QUANTITY 
+
+Cortado1:   
+
+MOV A,180                        
+
+JMP QUANTITY 
+
+Coldbrew1:
+MOV A,225                       
+
+JMP QUANTITY 
+
+
+
+QUANTITY:  
+
+    MOV BL,11 
+    MOV AH,9                   
+    MOV AL,0  
+    INT 10H
+
+    LEA DX,E_QUANTITY          
+    MOV AH,9
+    INT 21H  
+    
+    JMP MULTI        
+
+
+ASK: 
+   
+    LEA DX,AGAIN                
+    MOV AH,9
+    INT 21H 
+           
+    MOV AH,1              
+    INT 21H     
+     
+    CMP AL,49                  
+    JE BEGINTOP    
+    
+    CMP AL,50
+    JE OUTPUT2                  
+   
+    LEA DX,ER_MSG
+    MOV AH,9                   
+    INT 21H
+    
+    JMP ASK                      
+ 
+ERROR:   
+
+    LEA DX,ER_MSG             
+    MOV AH,9
+    INT 21H 
+    
+    JMP QUANTITY         
+    
+ER_DISCOUNT:   
+
+    LEA DX,ER_MSG            
+    MOV AH,9
+    INT 21H
+    
+    LEA DX,E_DISCOUNT           
+    MOV AH,9
+    INT 21H
+    
+    JMP INPUT_SUB             
+    
+MULTI:            
+
+INDEC3 PROC                        
+    
+    PUSH BX                        
+    PUSH CX
+    PUSH DX
+    
+    XOR BX,BX                      
+    
+    XOR CX,CX                     
+                    
+    
+    MOV AH,1                       
+    INT 21H
+
+
+    
+REPEAT4: 
+                                     
+    CMP AL,48                     
+    JL ERROR
+    
+    CMP AL,57                       
+    JG ERROR
+
+
+    AND AX,00FH                     
+    PUSH AX                        
+    
+    MOV AX,10                      
+    MUL BX                          
+    POP BX                          
+    ADD BX,AX                     
+    
+    
+    MOV AH,1
+    INT 21H
+    
+    CMP AL,0DH                     
+    JNE REPEAT4                     
+    
+    MOV AX,BX                      
+       
+    JMP MUL_
+    
+    POP DX                         
+    POP CX
+    POP BX
+    RET                              
+
+INDEC3 ENDP                        
+
+ADD_: 
+
+    MOV B,AX  
+    
+    XOR AX,AX                       
+    
+    MOV AX,B                         
+    ADD A,AX                        
+    
+    MOV AX,A                         
+    PUSH AX                          
+    JMP END
+
+SUB_: 
+
+    MOV B,AX 
+    
+    LEA DX,R                        
+    MOV AH,9
+    INT 21H
+    
+    
+    XOR AX,AX                       
+    
+    MOV AX,B                        
+    SUB A,AX                       
+    
+    MOV AX,A                        
+    PUSH AX    
+    ADD S,AX 
+    JMP OUTPUT
+
+MUL_: 
+
+    MOV B,AX
+                 
+    MOV BL,10                    
+    MOV AH,9 
+    MOV AL,0  
+    INT 10H
+     
+    
+    LEA DX,E_DISCOUNT               
+    MOV AH,9
+    INT 21H
+    
+    XOR AX,AX                        
+    MOV AX,B   
+    MUL A                          
+     
+    PUSH AX                          
+    
+    MOV A,AX 
+                                   
+    JMP INPUT_SUB                      
+    JMP OUTPUT 
+                                          
+INPUT_ADD: 
+
+INDEC1 PROC                         
+    
+    PUSH BX                          
+    PUSH CX
+    PUSH DX
+        
+BEGIN1:
+    
+    XOR BX,BX                          
+    XOR CX,CX                       
+    
+    MOV AH,1                        
+    INT 21H
+
+    
+REPEAT2: 
+                                    
+    CMP AL,48
+    JL ERROR
+    
+    CMP AL,57                        
+    JG ERROR  
+    
+    AND AX,00FH                     
+    PUSH AX                          
+    
+    MOV AX,10                      
+    MUL BX                          
+    POP BX                          
+    ADD BX,AX                       
+    
+    MOV AH,1                       
+    INT 21H
+    
+    CMP AL,0DH                     
+    JNE REPEAT2                      
+    
+    MOV AX,BX                       
+    JMP ADD_                         
+    
+    POP DX                          
+    POP CX
+    POP BX
+    RET                             
+    
+    
+
+INDEC1 ENDP   
+
+INPUT_SUB: 
+
+INDEC2 PROC
+    
+    PUSH BX                          
+    PUSH CX
+    PUSH DX
+    
+    XOR BX,BX                       
+    XOR CX,CX                        
+                    
+    MOV AH,1                         
+    INT 21H
+
+REPEAT3:
+    
+    CMP AL,48                       
+    JL ER_DISCOUNT
+    
+    CMP AL,57                        
+    JG ER_DISCOUNT
+
+    AND AX,00FH                     
+    PUSH AX                          
+    
+    MOV AX,10                       
+    MUL BX                           
+    POP BX                          
+    ADD BX,AX                       
+   
+    MOV AH,1
+    INT 21H
+    
+    CMP AL,0DH                      
+    JNE REPEAT3                     
+    
+    MOV AX,BX                       
+    OR CX,CX 
+                            
+    JMP SUB_
+
+    POP DX                           
+    POP CX
+    POP BX
+    RET                             
+                            
+
+
+INDEC2 ENDP 
+    
+OUTPUT:         
+
+OUTDEC PROC
+    
+    
+    PUSH AX                          
+    PUSH BX
+    PUSH CX
+    PUSH DX
+    
+    XOR CX,CX                        
+    MOV BX,10D                     
+    
+REPEAT1:
+    
+    XOR DX,DX                     
+    DIV BX                          
+    
+    PUSH DX                        
+    INC CX                          
+    
+    OR AX,AX                       
+    JNE REPEAT1                      
+    
+    MOV AH,2                        
+    
+PRINT_LOOP:
+    
+    POP DX                          
+    OR DL,30H                       
+    INT 21H                         
+    LOOP PRINT_LOOP                
+    
+    POP DX
+    POP CX                          
+    POP BX
+    POP AX 
+    
+    JMP ASK
+    
+    RET
+    OUTDEC ENDP 
+
+OUTPUT2: 
+
+    LEA DX,FT                       
+    MOV AH,9
+    INT 21H
+    
+    XOR AX,AX                        
+    
+    MOV AX,S                         
+                                        
+OUTDEC2 PROC
+       
+    PUSH AX                           
+    PUSH BX
+    PUSH CX
+    PUSH DX
+
+    XOR CX,CX                        
+    MOV BX,10D                       
+    
+REPEAT12:                                                      
+    
+    XOR DX,DX                       
+    DIV BX                           
+    
+    PUSH DX                          
+    INC CX                           
+    
+    OR AX,AX                         
+    JNE REPEAT12                     
+    
+    MOV AH,2                         
+    
+PRINT_LOOP2:
+    
+    POP DX                           
+    OR DL,30H                        
+    INT 21H                          
+    LOOP PRINT_LOOP2                 
+    
+    POP DX
+    POP CX                         
+    POP BX
+    POP AX 
+ 
+    OUTDEC2 ENDP 
+      
+END:
+MOV AH, 4CH                  
+INT 21H
